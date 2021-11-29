@@ -1,4 +1,4 @@
-import { Empty, CellType, Mine } from './cellTypes';
+import { Empty, CellType, Mine, NumberOfMines } from './cellTypes';
 
 const tranformFromFlatIndex = (
   flatIndex: number,
@@ -47,4 +47,53 @@ const generateMines = (
   return field;
 };
 
-export default generateMines;
+const getCountOfMines = (
+  field: Array<Array<CellType>>,
+  [i, j]: Array<number>
+): number => {
+  let count = 0;
+
+  for (let dx = -1; dx <= 1; dx++)
+    for (let dy = -1; dy <= 1; dy++) {
+      if (dx === 0 && dy === 0) continue;
+
+      const x = i + dx;
+      const y = j + dy;
+
+      if (
+        0 <= x &&
+        x < field.length &&
+        0 <= y &&
+        y < field[x].length &&
+        field[x][y] instanceof Mine
+      )
+        count++;
+    }
+
+  return count;
+};
+
+const generateNubersNearMines = (
+  field: Array<Array<CellType>>
+): Array<Array<CellType>> => {
+  const newField = new Array<Array<CellType>>();
+
+  for (let i = 0; i < field.length; i++) {
+    newField.push([]);
+    for (let j = 0; j < field[i].length; j++) {
+      if (field[i][j] instanceof Mine) {
+        newField[i].push(field[i][j]);
+        continue;
+      }
+
+      const count = getCountOfMines(field, [i, j]);
+
+      if (count) newField[i].push({ numberOfMines: count });
+      else newField[i].push(new Empty());
+    }
+  }
+
+  return newField;
+};
+
+export { generateMines, generateNubersNearMines };
