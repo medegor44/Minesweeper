@@ -2,6 +2,9 @@ class Mine {}
 
 class NumberOfMines {
   numberOfMines: number;
+  constructor(num: number) {
+    this.numberOfMines = num;
+  }
 }
 
 class Empty {}
